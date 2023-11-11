@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrap Table with Thymeleaf</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <h2>Users Table</h2>
+    <table class="table table-bordered table-striped">
+
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>role</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <span th:each="role : ${user.roles}" th:text="${role.name}"></span>
+            </td>
+            <td>
+                <a th:href="@{/admin/details/{id}(id=${user.id})}">
+                    <form th:method="GET" th:action="@{/admin/details/{id}(id=${user.id})}">
+                        <button type="submit"><i class="fas fa-info-circle"></i> Detail</button>
+                    </form>
+                </a>
+
+                <a  class="btn btn-primary btn-sm">
+                    <form th:method="GET" th:action="@{/admin/user/edit/{id}(id=${user.id})}">
+                        <button type="submit" class="btn btn-link" style="font-size: smaller; color: white;">
+                            <i class="fas fa-info-circle"></i> Edit
+                        </button>
+                    </form>
+                </a>
+
+
+
+
+                <a>
+                    <form th:method="DELETE" th:action="@{/admin/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm btn-group-sm">
+                        <button type="submit" class="btn btn-default custom-btn">
+                            <span class="glyphicon glyphicon-trash text-white"></span>
+                            <span class="text-white">Delete</span>
+                        </button>
+                    </form>
+
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <a href="admin/new" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> Add User
+    </a>
+
+</div>
+</body>
+</html>
