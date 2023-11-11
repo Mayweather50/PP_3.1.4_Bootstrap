@@ -34,36 +34,4 @@ public class RoleServicesImpl implements RoleServices {
         return roleRepository.getById(id);
     }
 
-    //@PersistenceContext
-    //private EntityManager entityManager;
-    //@Autowired
-    //public RoleServicesImpl(EntityManager entityManager) {
-//
-    //    this.entityManager = entityManager;
-    //}
-//
-    //@Override
-    //public List<Role> getAllRoles() {
-    //    TypedQuery<Role> roleTypedQuery = entityManager.createQuery("select r from Role r",Role.class);
-    //    return roleTypedQuery.getResultList();
-    //}
-//
-    //@Override
-    //public void deleteById(Long id) {
-    //    Role role = entityManager.find(Role.class,id);
-    //    if(role != null) {
-    //        entityManager.remove(role);
-    //    }
-    //}
-//
-    //@Override
-    //public void addRole(Role role) {
-    //    entityManager.persist(role);
-    //}
-//
-    //@Override
-    //public Role getRoleById(Long id) {
-    //    Role role = entityManager.find(Role.class,id);
-    //    return role;
-    //}
 }
