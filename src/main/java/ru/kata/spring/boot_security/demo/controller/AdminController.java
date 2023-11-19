@@ -90,17 +90,7 @@ public class AdminController implements ErrorController {
         return "redirect:/admin";
     }
 
-    //@PostMapping("/user")
-    //public String addUser(@ModelAttribute("user")User user) {
-        //    Role role = user.getRoles().stream().findFirst().orElse(null);
-        //    if (role != null) {
-            //        user.setUsername(role.getName().replace("ROLE_", "").toLowerCase());
-            //        user.setRoles(Collections.singleton(role));
-            //
-            //    }
-        //    userServices.addUser(user);
-        //    return "redirect:/admin";
-        //}
+ 
     @PostMapping("/user")
     public String addUser(@ModelAttribute("user") User user) {
         String username = user.getRoles().stream()

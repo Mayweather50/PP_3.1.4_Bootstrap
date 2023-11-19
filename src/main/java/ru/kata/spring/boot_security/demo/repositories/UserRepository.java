@@ -14,7 +14,7 @@ import java.util.Optional;
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //User findByUsername(String name);
+
 
     User findFirstByUsername(String username);
 
