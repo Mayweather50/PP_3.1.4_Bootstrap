@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,14 +9,17 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.services.RoleServices;
 import ru.kata.spring.boot_security.demo.services.UserServices;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController implements ErrorController {
     private UserServices userServices;
     private RoleServices roleServices;
 
@@ -26,44 +30,94 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String getAllUsers(Model model) {
+    public String getAllUsers(Model model, Principal principal) {
+        User user = new User();
+        User result = userServices.findFirstByEmail(principal.getName());
         model.addAttribute("users",userServices.getAllUsers());
+        model.addAttribute("user",user);
+        model.addAttribute("Allroles",roleServices.getAllRoles());
+        Optional<User> identity = userServices.getAllUsers()
+                .stream()
+                .filter(x -> "admin user".equals(x.getUsername()))
+                .findFirst();
+        User info = identity.get();
+        model.addAttribute("resultInfo",info);
+
         return "admin";
+    }
+
+    @GetMapping("/index")
+    public String index(Model model) {
+        model.addAttribute("usersAll",userServices.getAllUsers());
+        return "index";
     }
 
     @GetMapping("/details/{id}")
     public String getUserById(@PathVariable("id")Long id,Model model) {
-       model.addAttribute("user",userServices.getUserById(id));
+        model.addAttribute("user",userServices.getUserById(id));
         return "/user";
     }
 
 
     @GetMapping("/user/edit/{id}")
     public String editUser(Model model, @PathVariable(name = "id")Long id) {
-       model.addAttribute("user",userServices.getUserById(id));
-       model.addAttribute("role",roleServices.getAllRoles());
-       return "/edit";
+        model.addAttribute("user",userServices.getUserById(id));
+        model.addAttribute("role",roleServices.getAllRoles());
+        return "/edit";
     }
 
-    @PatchMapping("/user/{id}")
-    public String updateUser(@ModelAttribute("user")User user) {
+    @PostMapping("/update/{id}")
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", userServices.getUserById(id));
         userServices.updateUser(user);
         return "redirect:/admin";
-
     }
-    @DeleteMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id")Long id) {
+
+
+
+
+
+    @RequestMapping("/error")
+    @ResponseBody
+    String error(HttpServletRequest request) {
+        return "<h1>Error occurred</h1>";
+    }
+
+
+    @PostMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
         userServices.removeUser(id);
         return "redirect:/admin";
+    }
 
-    }
+    //@PostMapping("/user")
+    //public String addUser(@ModelAttribute("user")User user) {
+        //    Role role = user.getRoles().stream().findFirst().orElse(null);
+        //    if (role != null) {
+            //        user.setUsername(role.getName().replace("ROLE_", "").toLowerCase());
+            //        user.setRoles(Collections.singleton(role));
+            //
+            //    }
+        //    userServices.addUser(user);
+        //    return "redirect:/admin";
+        //}
     @PostMapping("/user")
-    public String addUser(@ModelAttribute("user")User user,@RequestParam(name = "roles", required = false) Long roleIds) {
-        Collection<Role> setrole = roleServices.getAllRoles().stream().filter(x -> x.getId() == roleIds).collect(Collectors.toSet());
-        user.setRoles(setrole);
+    public String addUser(@ModelAttribute("user") User user) {
+        String username = user.getRoles().stream()
+                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
+                .collect(Collectors.joining(" "));
+        user.setUsername(username);
         userServices.addUser(user);
-        return "redirect:admin";
+        return "redirect:/admin";
     }
+
+
+
+
+
+
+
+
 
 
 

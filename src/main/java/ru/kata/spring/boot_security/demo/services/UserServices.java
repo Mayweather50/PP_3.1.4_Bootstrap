@@ -16,6 +16,7 @@ public interface UserServices extends UserDetailsService {
     void updateUser(User user);
     void removeUser(Long id);
 
-    public User findByUsername(String username) throws UsernameNotFoundException;
+   // public User findByUsername(String username) throws UsernameNotFoundException;
+   User findFirstByEmail(String email);
 
 }

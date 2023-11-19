@@ -16,7 +16,7 @@ public class Role implements GrantedAuthority {
     private long id;
     @Column(name = "name")
     private String name;
- 
+
 
 
     public Role(long id) {
@@ -50,4 +50,6 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return getName();
     }
+
+
 }

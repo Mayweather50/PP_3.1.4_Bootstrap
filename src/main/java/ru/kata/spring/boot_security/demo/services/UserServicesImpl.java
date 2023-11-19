@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -46,9 +47,10 @@ public class UserServicesImpl implements UserServices {
     @Override
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-
+        userRepository.saveAndFlush(user);
     }
+
+
     @Transactional
     @Override
     public void updateUser(User user) {
@@ -60,25 +62,29 @@ public class UserServicesImpl implements UserServices {
     public void removeUser(Long id) {
         userRepository.deleteById(id);
     }
+
+
+
     @Override
     @Transactional
-    public User findByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public User findFirstByEmail(String email) throws UsernameNotFoundException {
+        User user = userRepository.findFirstByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User %s not found!", username));
+            throw new UsernameNotFoundException(String.format("User with email %s not found!", email));
         }
         return user;
     }
 
 
+
     @Override
-   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       User user = findByUsername(username);
+   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+       User user = findFirstByEmail(email);
        if (user != null) {
-           return new org.springframework.security.core.userdetails.User(user.getUsername(),
+           return new org.springframework.security.core.userdetails.User(user.getEmail(),
                    user.getPassword(), mapRolesToAuthorities(user.getRoles()));
        } else {
-           throw new UsernameNotFoundException(String.format("User %s not found", username));
+           throw new UsernameNotFoundException(String.format("User %s not found", email));
        }
    }
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
