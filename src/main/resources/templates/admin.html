@@ -190,7 +190,7 @@
 
                                                                     <div class="mb-3">
                                                                         <label for="delete-password"><b>Password</b></label>
-                                                                        <input class="form-control" readonly type="text"
+                                                                        <input class="form-control" readonly type="password"
                                                                                id="delete-password"
                                                                                th:value="*{password}"
                                                                                name="password" disabled>
@@ -292,7 +292,7 @@
 
                                                                     <div class="mb-3">
                                                                         <label for="edit-password"><b>Password</b></label>
-                                                                        <input class="form-control" type="text"
+                                                                        <input class="form-control" type="password"
                                                                                id="edit-password"
                                                                                th:value="*{password}"
                                                                                th:name="password">
@@ -300,7 +300,7 @@
 
                                                                     <div class="mb-3">
                                                                         <label><b>Role</b></label>
-                                                                        <select class="form-select"
+                                                                        <select class="form-select" multiple
                                                                                 aria-label="Default select example"
                                                                                 id="edit-roles"
                                                                                 th:name="roles"
@@ -424,7 +424,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <table class="table table-success table-striped">
+                                    <table class="table  table-striped">
                                         <thead>
                                         <tr>
                                             <th scope="col">ID</th>

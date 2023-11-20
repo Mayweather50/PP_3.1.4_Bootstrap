@@ -68,6 +68,15 @@ public class User implements UserDetails {
         this.email = email;
         this.roles = roles;
     }
+    public User(Long id, String username, String password, String email,String firstname,String lastname, Collection<Role> roles) {
+        this.id = id ;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
 
     public User() {
         this.roles = new HashSet<>();

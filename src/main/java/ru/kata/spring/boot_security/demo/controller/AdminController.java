@@ -1,6 +1,10 @@
 package ru.kata.spring.boot_security.demo.controller;
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +33,9 @@ public class AdminController implements ErrorController {
         this.roleServices = roleServices;
     }
 
-    @GetMapping("")
+
+
+     @GetMapping("")
     public String getAllUsers(Model model, Principal principal) {
         User user = new User();
         User result = userServices.findFirstByEmail(principal.getName());
@@ -38,10 +44,12 @@ public class AdminController implements ErrorController {
         model.addAttribute("Allroles",roleServices.getAllRoles());
         Optional<User> identity = userServices.getAllUsers()
                 .stream()
-                .filter(x -> "admin user".equals(x.getUsername()))
+                .filter(x -> "admin user".equals(x.getUsername()) || "admin".equals(x.getUsername()))
                 .findFirst();
-        User info = identity.get();
-        model.addAttribute("resultInfo",info);
+        if(!identity.isEmpty()) {
+            User info = identity.get();
+            model.addAttribute("resultInfo", info);
+        }
 
         return "admin";
     }
@@ -69,6 +77,10 @@ public class AdminController implements ErrorController {
     @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userServices.getUserById(id));
+        String username = user.getRoles().stream()
+                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
+                .collect(Collectors.joining(" "));
+        user.setUsername(username);
         userServices.updateUser(user);
         return "redirect:/admin";
     }
@@ -90,7 +102,7 @@ public class AdminController implements ErrorController {
         return "redirect:/admin";
     }
 
- 
+
     @PostMapping("/user")
     public String addUser(@ModelAttribute("user") User user) {
         String username = user.getRoles().stream()
