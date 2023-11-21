@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController implements ErrorController {
+public class AdminController {
     private UserServices userServices;
     private RoleServices roleServices;
 
@@ -36,28 +36,14 @@ public class AdminController implements ErrorController {
 
 
      @GetMapping("")
-    public String getAllUsers(Model model, Principal principal) {
+    public String getAllUsers(Model model) {
         User user = new User();
-        User result = userServices.findFirstByEmail(principal.getName());
         model.addAttribute("users",userServices.getAllUsers());
         model.addAttribute("user",user);
         model.addAttribute("Allroles",roleServices.getAllRoles());
-        Optional<User> identity = userServices.getAllUsers()
-                .stream()
-                .filter(x -> "admin user".equals(x.getUsername()) || "admin".equals(x.getUsername()))
-                .findFirst();
-        if(!identity.isEmpty()) {
-            User info = identity.get();
-            model.addAttribute("resultInfo", info);
-        }
-
+        User userInfo = userServices.getUserInfo();
+        model.addAttribute("resultInfo", userInfo);
         return "admin";
-    }
-
-    @GetMapping("/index")
-    public String index(Model model) {
-        model.addAttribute("usersAll",userServices.getAllUsers());
-        return "index";
     }
 
     @GetMapping("/details/{id}")
@@ -67,34 +53,12 @@ public class AdminController implements ErrorController {
     }
 
 
-    @GetMapping("/user/edit/{id}")
-    public String editUser(Model model, @PathVariable(name = "id")Long id) {
-        model.addAttribute("user",userServices.getUserById(id));
-        model.addAttribute("role",roleServices.getAllRoles());
-        return "/edit";
-    }
-
     @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userServices.getUserById(id));
-        String username = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
-                .collect(Collectors.joining(" "));
-        user.setUsername(username);
         userServices.updateUser(user);
         return "redirect:/admin";
     }
-
-
-
-
-
-    @RequestMapping("/error")
-    @ResponseBody
-    String error(HttpServletRequest request) {
-        return "<h1>Error occurred</h1>";
-    }
-
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
@@ -105,22 +69,8 @@ public class AdminController implements ErrorController {
 
     @PostMapping("/user")
     public String addUser(@ModelAttribute("user") User user) {
-        String username = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
-                .collect(Collectors.joining(" "));
-        user.setUsername(username);
         userServices.addUser(user);
         return "redirect:/admin";
     }
-
-
-
-
-
-
-
-
-
-
 
 }

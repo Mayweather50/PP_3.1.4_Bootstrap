@@ -40,6 +40,16 @@ public class UserServicesImpl implements UserServices {
     }
     @Transactional
     @Override
+    public User getUserInfo () {
+        Optional<User> identity = getAllUsers()
+                .stream()
+                .filter(x -> "admin user".equals(x.getUsername()) || "admin".equals(x.getUsername()))
+                .findFirst();
+            User info = identity.get();
+        return info;
+    }
+    @Transactional
+    @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NullPointerException("Значение не найдено в базе данных"));
     }
@@ -47,6 +57,10 @@ public class UserServicesImpl implements UserServices {
     @Override
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        String username = user.getRoles().stream()
+                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
+                .collect(Collectors.joining(" "));
+        user.setUsername(username);
         userRepository.saveAndFlush(user);
     }
 
@@ -55,6 +69,10 @@ public class UserServicesImpl implements UserServices {
     @Override
     public void updateUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        String username = user.getRoles().stream()
+                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
+                .collect(Collectors.joining(" "));
+        user.setUsername(username);
         userRepository.save(user);
     }
     @Transactional
