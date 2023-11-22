@@ -33,13 +33,10 @@ public class AdminController {
         this.roleServices = roleServices;
     }
 
-
-
      @GetMapping("")
     public String getAllUsers(Model model) {
-        User user = new User();
         model.addAttribute("users",userServices.getAllUsers());
-        model.addAttribute("user",user);
+        model.addAttribute("user",new User());
         model.addAttribute("Allroles",roleServices.getAllRoles());
         User userInfo = userServices.getUserInfo();
         model.addAttribute("resultInfo", userInfo);

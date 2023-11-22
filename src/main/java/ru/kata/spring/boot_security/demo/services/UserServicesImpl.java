@@ -61,7 +61,7 @@ public class UserServicesImpl implements UserServices {
                 .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
                 .collect(Collectors.joining(" "));
         user.setUsername(username);
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
     }
 
 
