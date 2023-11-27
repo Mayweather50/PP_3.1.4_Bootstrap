@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,12 +21,15 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
     @Column(name = "password")
+    @JsonProperty("password")
     private String password;
     @Column(name = "email")
     private String email;
     @Column(name = "firstname")
+    @JsonFormat(locale = "firstname")
     private String firstname;
     @Column(name = "lastname")
+    @JsonFormat(locale = "lastname")
     private String lastname;
     @Column(name = "age")
     private int age;

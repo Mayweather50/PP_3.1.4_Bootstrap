@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.services;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,24 +15,23 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
 @Transactional
 public class UserServicesImpl implements UserServices {
-
     private UserRepository userRepository;
-
+    private RoleServices roleServices;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
     @Autowired
-    public UserServicesImpl(BCryptPasswordEncoder bCryptPasswordEncoder,UserRepository userRepository) {
+    public UserServicesImpl(BCryptPasswordEncoder bCryptPasswordEncoder,UserRepository userRepository,RoleServices roleServices) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleServices = roleServices;
     }
     @Transactional
     @Override
@@ -60,27 +60,35 @@ public class UserServicesImpl implements UserServices {
         String username = user.getRoles().stream()
                 .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
                 .collect(Collectors.joining(" "));
+        Set<Role> roles = user.getRoles().stream()
+                .map(role -> "ROLE_" + role.getName())
+                .map(roleServices::findByName)
+                .collect(Collectors.toSet());
+        user.setRoles(roles);
         user.setUsername(username);
         userRepository.save(user);
     }
 
-
-    @Transactional
-    @Override
-    public void updateUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        String username = user.getRoles().stream()
-                .map(role -> role.getName().replace("ROLE_", "").toLowerCase())
-                .collect(Collectors.joining(" "));
-        user.setUsername(username);
-        userRepository.save(user);
+    public void updateUser(User user, Long id) {
+        if (userRepository.existsById(id)) {
+            String username = user.getRoles().stream()
+                    .map(x -> x.getName().replace("ROLE_", "").toLowerCase())
+                    .collect(Collectors.joining(" "));
+            Set<Role> roles = user.getRoles().stream()
+                    .map(role -> "ROLE_" + role.getName())
+                    .map(roleServices::findByName)
+                    .collect(Collectors.toSet());
+            user.setRoles(roles);
+            user.setUsername(username);
+            userRepository.save(user);
+        }
     }
+
     @Transactional
     @Override
     public void removeUser(Long id) {
         userRepository.deleteById(id);
     }
-
 
 
     @Override
@@ -92,8 +100,6 @@ public class UserServicesImpl implements UserServices {
         }
         return user;
     }
-
-
 
     @Override
    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

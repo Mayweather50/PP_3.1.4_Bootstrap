@@ -21,6 +21,13 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/templates/js/");
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/admin/**")
+                .allowedOrigins("http://127.0.0.1:8080")
+                .allowedMethods("GET", "POST", "PUT","PATCH", "DELETE");
+    }
+
 
 
 }

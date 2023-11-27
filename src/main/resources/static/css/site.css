@@ -2,18 +2,15 @@
 .table-bordered td {
     border: none;
 }
-
 .small-btn {
     padding: 0.25rem 0.5rem;
     height: 33px;
     width: 68px;
     font-size: 12px;
 }
-
 .delete-text {
     margin-top: -8px !important;
 }
-
 .sidebar {
     height: 100%;
     width: 200px;
@@ -23,7 +20,6 @@
     background-color: #f8f9fa;
     padding-top: 20px;
 }
-
 .sidebar a {
     padding: 6px 8px 6px 16px;
     text-decoration: none;
@@ -31,11 +27,9 @@
     color: #000;
     display: block;
 }
-
 .sidebar a:hover {
     color: #17A2B8;
 }
-
 .content {
     margin-left: 200px;
     padding: 20px;
@@ -47,6 +41,8 @@
     color: white;
 }
 
+
+
 .btn-custom {
     background: linear-gradient(to bottom, #007bff 0%, #007AFC 100%);
     border: none;
@@ -55,15 +51,13 @@
     text-align: left;
     padding-left: 10px;
 }
-
 .btn-defaults {
     background: #f8f9fa;
-    color: black;
+    color: black; /* Добавлен черный цвет текста */
     width: 200px;
-    text-align: left;
-    padding-left: 10px;
+    text-align: left; /* Добавлено выравнивание текста по левому краю */
+    padding-left: 10px; /* Добавлен отступ слева для текста */
 }
-
 .sidebar {
     height: 100%;
     width: 200px;
@@ -73,14 +67,8 @@
     background-color: #f8f9fa;
     padding-top: 20px;
 }
-/* ............*/
-.top-banner {
-    background-color: #343A40;
-    width: 100%;
-    height: 50px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
+.h3 {
+    color: #F7F7F7;
+    margin-left: 20px;
 }
 
