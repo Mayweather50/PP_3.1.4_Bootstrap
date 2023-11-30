@@ -1,0 +1,74 @@
+.table-bordered th,
+.table-bordered td {
+    border: none;
+}
+.small-btn {
+    padding: 0.25rem 0.5rem;
+    height: 33px;
+    width: 68px;
+    font-size: 12px;
+}
+.delete-text {
+    margin-top: -8px !important;
+}
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+.sidebar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    color: #000;
+    display: block;
+}
+.sidebar a:hover {
+    color: #17A2B8;
+}
+.content {
+    margin-left: 200px;
+    padding: 20px;
+}
+
+.btn-admin {
+    background: linear-gradient(to bottom, #007bff 0%, #007AFC 100%);
+    border: none;
+    color: white;
+}
+
+
+
+.btn-custom {
+    background: linear-gradient(to bottom, #007bff 0%, #007AFC 100%);
+    border: none;
+    color: white;
+    width: 200px;
+    text-align: left;
+    padding-left: 10px;
+}
+.btn-defaults {
+    background: #f8f9fa;
+    color: black; /* Добавлен черный цвет текста */
+    width: 200px;
+    text-align: left; /* Добавлено выравнивание текста по левому краю */
+    padding-left: 10px; /* Добавлен отступ слева для текста */
+}
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+.h3 {
+    color: #F7F7F7;
+    margin-left: 20px;
+}
+
